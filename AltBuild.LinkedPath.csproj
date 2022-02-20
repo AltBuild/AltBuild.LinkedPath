@@ -1,4 +1,4 @@
-﻿<!-- AltBuild.LinkedPath Copyright 2005-2020 ALTBUILD Co.,LTD. -->
+﻿<!-- AltBuild.LinkedPath Copyright 2005-2022 ALTBUILD Co.,LTD. -->
 <!-- AltBuild LinkedPath Data Library. -->
 
 <Project Sdk="Microsoft.NET.Sdk">
@@ -8,9 +8,9 @@
     <IsPackable>true</IsPackable>
     <AssemblyName>AltBuild.LinkedPath</AssemblyName>
     <RootNamespace>AltBuild.LinkedPath</RootNamespace>
-    <Version>2.8.0-alpha</Version>
+    <Version>3.3.1-alpha</Version>
     <Description>Link objects with strings component.</Description>
-    <Copyright>ALTBUILD CO.,LTD.</Copyright>
+    <Copyright>Keiichi Saito, Teruyuki Onuma, ALTBUILD CO.,LTD.</Copyright>
     <Company>ALTBUILD CO.,LTD.</Company>
     <Authors>Keiichi Saito, Teruyuki Onuma</Authors>
     <PackageIcon>ABlogoRA.png</PackageIcon>
@@ -21,10 +21,6 @@
   <ItemGroup>
     <None Include="..\ABlogoRA.png" Pack="True" PackagePath="" />
     <None Include="LICENSE.txt" Pack="True" PackagePath="" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\AltBuild.BaseExtensions\AltBuild.BaseExtensions.csproj" />
   </ItemGroup>
 
 </Project>

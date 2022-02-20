@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace AltBuild.LinkedPath
+namespace AltBuild.LinkedPath.Converters
 {
     /// <summary>
     /// DatastoreModel converter attribute.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Interface, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = false)]
     public class FormatConverterAttribute : Attribute
     {
         public Type ConverterType { get; init; }

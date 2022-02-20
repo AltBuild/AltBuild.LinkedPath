@@ -1,10 +1,7 @@
+using AltBuild.LinkedPath.Parser;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Runtime.CompilerServices;
 
-namespace AltBuild.LinkedPath
+namespace AltBuild.LinkedPath.Converters
 {
     /// <summary>
     /// Indexer converter interface
@@ -13,6 +10,6 @@ namespace AltBuild.LinkedPath
     {
         PathKeyValueType KVType { get; }
 
-        bool TryConvert(PathMember pathMember, object source, out object destine);
+        bool TryConvert(PathMember pathMember, object source, out object destineValue, out Type destineType);
     }
 }

@@ -1,11 +1,7 @@
+using AltBuild.LinkedPath.Parser;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Runtime.CompilerServices;
-using System.Reflection;
 
-namespace AltBuild.LinkedPath
+namespace AltBuild.LinkedPath.Converters
 {
     /// <summary>
     /// Indexer converter basis class
@@ -17,7 +13,12 @@ namespace AltBuild.LinkedPath
         /// </summary>
         public virtual PathKeyValueType KVType { get; } = PathKeyValueType.None;
 
-        public virtual bool TryConvert(PathMember pathMember, object source, out object destine)
+        public virtual bool TryConvert(PathMember pathMember, object source, out object destineValue, out Type destineType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual bool TryContains(PathMember pathMember, object source)
         {
             throw new NotImplementedException();
         }

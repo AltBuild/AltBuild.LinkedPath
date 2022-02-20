@@ -1,9 +1,9 @@
+using AltBuild.LinkedPath.Converters;
+using AltBuild.LinkedPath.Parser;
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Diagnostics;
+using System.Text;
+using System.Runtime.CompilerServices;
 
 namespace AltBuild.LinkedPath
 {
@@ -17,7 +17,7 @@ namespace AltBuild.LinkedPath
         /// </summary>
         /// <param name="obj"></param>
         /// <returns>true: default(obj), false: not default(objt)</returns>
-        public static bool IsDefault(this object obj)
+        public static bool IsDefault(object obj)
         {
             if (obj == null)
                 return true;
@@ -29,13 +29,21 @@ namespace AltBuild.LinkedPath
                 return false;
         }
 
+        public static bool TryInduct(this object obj, PathMember pathMember, out InductInfo inductInfo) =>
+            !(inductInfo = Induct(obj, pathMember)).Frame.IsUnduct;
+
+
+        public static bool TryInduct(this object obj, string path, out InductInfo inductInfo) =>
+            !(inductInfo = Induct(obj, path)).Frame.IsUnduct;
+
         /// <summary>
         /// Get path value
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static DiveValue ToDive(this object obj, string path) => PathFactory.Parse(path).FromDiveInner(obj).Last;
+        public static InductInfo Induct(this object obj, string path, InductMethods methods = InductMethods.Normal) =>
+            InductInfo.Create(PathFactory.Parse(path), obj, null, methods);
 
         /// <summary>
         /// Get path value
@@ -43,7 +51,8 @@ namespace AltBuild.LinkedPath
         /// <param name="obj"></param>
         /// <param name="pathMember"></param>
         /// <returns></returns>
-        public static DiveValue ToDive(this object obj, PathMember pathMember) => pathMember.FromDiveInner(obj).Last;
+        public static InductInfo Induct(this object obj, PathMember pathMember, InductMethods methods = InductMethods.Normal) =>
+            InductInfo.Create(pathMember, obj, null, methods);
 
         /// <summary>
         /// Extended ToString.
@@ -79,15 +88,12 @@ namespace AltBuild.LinkedPath
             //      2-1) Search FormatConvertAttribute       =>  Select FormatConverter with source type and format
             //      2-2) Search obj.GetType() == sourceType  =>  Select FormatConverter with source typp and format
 
-
-
-
             // Return null.
             if (obj == null)
                 return null;
 
             // Delegate to IObjectBase
-            if (obj is IObjectBase iObjectBase)
+            if (obj is IInductiveBase iObjectBase)
                 return iObjectBase.ToString(pathElements);
 
             // Return default ToString method value.
@@ -121,9 +127,9 @@ namespace AltBuild.LinkedPath
 
                     else if (element.Type == PathElementType.Value)
                     {
-                        var diveValue = obj.ToDive(element.PathMember);
-                        if (diveValue?.Value != null)
-                            results.Append(diveValue.Value);
+                        var inductInfo = obj.Induct(element.PathMember);
+                        if (inductInfo?.ReturnValue != null)
+                            results.Append(inductInfo.ReturnValue);
                     }
                     else
                         throw new NotImplementedException("PathElementType error.");
@@ -166,7 +172,7 @@ namespace AltBuild.LinkedPath
 
                 else if (format == null || format == "@")
                 {
-                    if (ValueTypeExtensions.IsNumeric((ValueType)obj))
+                    if (IsNumeric((ValueType)obj))
                         result = RealNumberExtensions.ToRealString(obj.ToString());
 
                     else
@@ -188,5 +194,16 @@ namespace AltBuild.LinkedPath
             result = null;
             return false;
         }
+
+        public static bool IsInteger(this ValueType value) =>
+            value is Int32 || value is Int64 || value is Int16 ||
+            value is Byte || value is SByte ||
+            value is UInt32 || value is UInt64 || value is UInt16;
+
+        public static bool IsFloat(this ValueType value) =>
+            value is decimal || value is double || value is float;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsNumeric(ValueType value) => IsInteger(value) || IsFloat(value);
     }
 }

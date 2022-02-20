@@ -1,10 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Runtime.CompilerServices;
 
-namespace AltBuild.LinkedPath
+namespace AltBuild.LinkedPath.Converters
 {
     /// <summary>
     /// Format with Type converter basis class

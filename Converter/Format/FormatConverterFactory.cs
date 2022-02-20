@@ -1,11 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.Concurrent;
-using System.Text;
-using System.Threading;
-using System.Runtime.CompilerServices;
+using System.Collections.Generic;
 
-namespace AltBuild.LinkedPath
+namespace AltBuild.LinkedPath.Converters
 {
     /// <summary>
     /// Format type converter
@@ -15,7 +12,7 @@ namespace AltBuild.LinkedPath
         static ConcurrentDictionary<Type, List<IFormatConverter>> destineStore = new();
         static ConcurrentDictionary<Type, List<IFormatConverter>> sourceStore = new();
 
-        public static void Add(IFormatConverter converter)
+        public static void Include(IFormatConverter converter)
         {
             if (converter.DestineType != null)
                 destineStore.GetOrAdd(converter.DestineType, t => new List<IFormatConverter>()).Add(converter);
@@ -43,6 +40,21 @@ namespace AltBuild.LinkedPath
                         return true;
 
             destine = null;
+            return false;
+        }
+
+        public static bool TryGetConverterWithDestineType<T>(string format, object source, out T destine)
+        {
+            if (TryGetConverterWithDestineType(typeof(T), format, source, out object destineValue))
+            {
+                if (destineValue is T value)
+                {
+                    destine = value;
+                    return true;
+                }
+            }
+
+            destine = default(T);
             return false;
         }
     }
